@@ -1,0 +1,74 @@
+﻿@using AE.Models
+@model IEnumerable<AE.Models.Product>
+@{
+    ViewBag.Title = "ShowCart";
+    ViewBag.Contor = 0;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+
+</head>
+<body style="padding: 0 0 0 0">
+
+    <ul style="margin-bottom:0; text-align:justify; justify-content:space-around; font-size:larger; position:fixed; width:100%; padding-left:20%;font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; ">
+        <li><a href="@Url.Action("ShowProducts","ShowProducts")" style="color:white; text-decoration:none">Products</a></li>
+        <li><a class="active" href="@Url.Action("ShowCart","Cart")" style="color:white; text-decoration:none">Cart</a></li>
+        <li><a href="@Url.Action("ShowOrders","Order")" style="color:white; text-decoration:none">Orders</a></li>
+        <li><a href="@Url.Action("Add", "Product")" style="color:white; text-decoration:none">Add product</a></li>
+    </ul>
+
+    <div style="padding-left:15%; padding-top:5%; padding-right:15%; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; text-align:center">
+        @foreach (Product product in Model)
+        {
+            <div style="width:100%;display:flex; margin:auto; justify-content:center; align-items:center">
+                <div style="display:block; width:30%">
+                    <img src="data:image;base64,@System.Convert.ToBase64String(product.Photo)" alt="Product photo" style="height:200px;width:200px;" />
+                </div>
+                <div style="text-align:left; font-family:serif; font: 20; width:40%; height:100%; top:50%;">
+                    <strong>@product.Name @product.Brand @product.Model, @product.Other_properties</strong>
+                </div>
+                <div style="font-family:Verdana; color:brown; font:35; font-weight: bold; align-content:space-between; justify-content:space-around; width:10%;">
+                    @product.Price  $
+                </div>
+                <button style="text-align: center; border-radius:12px; background-color:bisque; color:black; float:right; cursor:pointer; width:100px;" onclick="location.href = '@Url.Action("RemoveFromCart", "Cart", new { Cart_product_id = ViewBag.Cart_product_id[ViewBag.contor++] })'">
+                    Delete from cart
+                </button>
+            </div>
+        }
+    </div>
+    <div style="padding-top:5%">
+        @if (Convert.ToDouble(@ViewBag.Total_price) > 0)
+        {
+            ViewBag.contor--;
+            <div style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; text-align: center">
+                <div style="padding-left: 15%; padding-top: 2%; padding-right: 15%; display:flex; margin:auto; justify-content:center; align-items:center; padding-top:50px">
+                    Total Price: @ViewBag.Total_price
+                </div>
+                <div style="display:flex; justify-content:center; padding-top:100px">
+                    <button style="text-align: center; border-radius:12px; background-color:aquamarine; color:black; float:right; cursor:pointer;" onclick="location.href = '@Url.Action("AddOrder", "Order", new { Cart_product_id = ViewBag.Cart_product_id[ViewBag.contor] })'"> Confirm the order </button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div style="font-size:x-large; color:brown; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; text-align:center">
+                Your cart is empty!
+            </div>
+        }
+    </div>
+
+</body>
+</html>
+
+@section Scripts{
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+}
